@@ -1,0 +1,274 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="industryCss.css">
+    <script src="jquery-3.3.1.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            // adding valus to extBoxes ............................................................................
+
+              var IDT;
+              var NameT;
+              var pwT;
+              var tyT;
+              var emT;
+              var affT;
+
+            var getValuePK = localStorage.getItem("textvalue");
+            var urlUserId = 'api/Student/' + getValuePK;
+
+              $.ajax({
+                  type: 'GET',
+                  url: urlUserId,
+                    dataType: 'json',
+                    success: function (data) {
+                        $.each(data, function (index, val) {                          
+                             IDT = val.NIC;
+                             NameT = val.Name;
+                             pwT = val.pw;
+                             tyT = val.ty;
+                             emT = val.em;
+                             affT = val.aff;
+
+                            // loading items to the table ...
+                            //$("#txtNIC").val(IDT);
+                            $("#txtNm").val(NameT);
+                            $("#txtEm").val(emT);
+                            $("#txtAff").val(affT);
+                            $("#txtPw").val(pwT);
+                        });
+                    }
+              });
+
+            // logOut ...............................................................
+
+            $("#lo").click(function () {
+                window.location.replace("login.html");
+            });
+            var userLoginNic = 10240810;
+
+            // update userAccountInfo ..............................
+            $("#udSubBtn").click(function () {
+
+                if ((NameT != $("#txtNm").val()) || (emT != $("#txtEm").val()) || (affT != $("#txtAff").val()) || (pwT != $("#txtPw").val())  ) {
+
+                    alert("conne");
+
+                    $.ajax({
+                        type: 'PUT',
+                         url: 'api/Editaccount/' + userLoginNic,
+                          data: {
+                              "Name": $("#txtNm").val(),
+                              "em": $("#txtEm").val(),
+                              "aff": $("#txtAff").val(),
+                              //"ty": $("#personalDrop").val(),
+                              "pw": $("#txtPw").val()
+                          }
+                    });
+                }
+            });
+
+           // dealing  with tables ................................................................................
+            var urlStdQli;
+            var qs;
+            var count = 0;
+            $("#BtnQSearch").click(function () {
+
+                // clearing the dropDownLIsts ...
+                $("#listStdQuli").empty();
+                $("#listQuliQuli").empty();
+                $("#listEmQuli").empty();
+
+                qs = $("#qSelector option:selected").val();
+                $("#listQuliQuli").append('<li>' + qs + '</li>')
+                urlStdQli = 'api/Qualification?nm=' + qs;
+
+                //alert(urlStdQli);
+
+                $.ajax({
+                    type: 'GET',
+                    url: urlStdQli,
+                    dataType: 'json',
+                    success: function (data) {
+                        $.each(data, function (index, val) {
+                           
+                            var nme = val.sID;
+                            
+                              $.ajax({
+                                  type: 'GET',
+                                  url: 'api/Student2/' + nme,
+                                  dataType: 'json',
+                                  success: function (data) {
+                                      $.each(data, function (index, val2) {
+                                          var fn = val2.Name;
+                                          var em = val2.em;
+                                          $("#listStdQuli").append('<li>' + fn + '</li>');
+                                          $("#listEmQuli").append('<li>' + em + '</li>');
+                                          
+                                      });
+                                  }
+                              });
+    
+                        });
+                    }
+                });
+                
+            });
+
+            // getting valus to Category table ........................................................................
+
+            var urlStdCat;
+            $("#btnCatSearch").click(function () {
+
+                // clearing the dropDownLIsts ...
+                $("#listStdCat").empty();
+                $("#listCatCat").empty();
+                $("#listEmCat").empty();
+
+                qs = $("#dropCatList option:selected").val();
+                if (qs == 1) {
+                    $("#listCatCat").append('<li>Programming</li>');
+                }
+                else if (qs == 2) {
+                    $("#listCatCat").append('<li>Quality Assurance</li>');
+                }
+                else {
+                    $("#listCatCat").append('<li>Networking</li>');
+                }
+               
+                urlStdCat = 'api/Category/' + qs  + '?s=overide';
+
+                //alert(urlStdCat);
+
+                $.ajax({
+                    type: 'GET',
+                    url: urlStdCat,
+                    dataType: 'json',
+                    success: function (data) {
+                        $.each(data, function (index, val) {
+                           
+                            var nme = val.sID;
+                              $.ajax({
+                                  type: 'GET',
+                                  url: 'api/Student2/' + nme,
+                                  dataType: 'json',
+                                  success: function (data) {
+                                      $.each(data, function (index, val2) {
+                                          var fn = val2.Name;
+                                          var em = val2.em;
+                                          $("#listStdCat").append('<li>' + fn + '</li>');
+                                          $("#listEmCat").append('<li>' + em + '</li>');
+                                          
+                                      });
+                                  }
+                              });
+    
+                        });
+                    }
+                });
+                
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <!-- <div class="m1">
+        
+    </div>-->
+    <div class="m1">
+        <div class="left sep">
+            <h1 class="m3Hed">Edit your Profile</h1>
+            <input type="text" id="txtNm" class="txtF" placeholder=""> <br>
+            <input type="text" id="txtEm" class="txtF" placeholder=""> <br>
+            <input type="text" id="txtAff" class="txtF" placeholder=""> <br>
+            <input type="text" id="txtPw" class="txtF" placeholder=""> <br>
+            <!--<input type="text" id="fn" class="txtF" placeholder=""> <br>
+    <input type="text" id="fn" class="txtF" placeholder=""> <br>-->
+            <button id="udSubBtn">Submit</button>
+            <button id="lo" style="width:20%; padding:1%; background-color:red; color:white; margin-top: 5%"> Logout </button>
+        </div>
+        <div class="right sep">
+            <!--.................................................................................................-->
+            <div class="rTop ud">
+                <div class="catDiv">
+                    <p class="catLbl float">Category</p>
+                    <select name="" id="dropCatList" class="catDrop">
+                        <option value="1">
+                            Programing
+                        </option>
+                        <option value="4">
+                            Network
+                        </option>
+                        <option value="2">
+                            Quality Assurance
+                        </option>
+                    </select>
+                    <button class="cSBtn" id="btnCatSearch">Search</button>
+                </div>
+
+                <div class="tblDiv">
+                    <p class="tblHed float">Category</p>
+                    <p class="tblHed float">Student</p>
+                    <p class="tblHed float">E-Mail</p>
+                    <div class="clear"></div>
+                    <ol class="catList" id="listCatCat">
+                    </ol>
+                    <ul class="catList cl2" id="listStdCat">
+                    </ul>
+                    <ul class="catList cl2" id="listEmCat">
+                    </ul>
+                </div>
+            </div>
+            <!--..................................................................................................-->
+            <div class="rDown ud">
+                <div class="catDiv">
+                    <p class="catLbl float">Category</p>
+                    <select name="" id="qSelector" class="catDrop">
+                        <option value="CSharp">
+                            C#
+                        </option>
+                        <option value="PHP">
+                            PHP
+                        </option>
+                        <option value="JavaScript">
+                            JavaScript
+                        </option>
+                        <option value="NetworkSecurity">
+                            Network Securuty
+                        </option>
+                        <option value="Audit">
+                            Audit
+                        </option>
+                        <option value="Pentesting">
+                            Pentesting
+                        </option>
+                        <option value="Ruby">
+                            Ruby on ralls
+                        </option>
+                    </select>
+                    <button class="cSBtn" id="BtnQSearch">Search</button>
+                </div>
+                <div class="tblDiv">
+                    <p class="tblHed float">Qualification</p>
+                    <p class="tblHed float">Student</p>
+                    <p class="tblHed float">E-Mail</p>
+                    <div class="clear"></div>
+                    <ol class="catList" id="listQuliQuli">
+                    </ol>
+                    <ul class="catList cl2" id="listStdQuli">
+                    </ul>
+                    <ul class="catList cl2" id="listEmQuli">
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

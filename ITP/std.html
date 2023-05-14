@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <script src="jquery-3.3.1.js"></script>
+    <script>
+        $(document).ready(function () {
+            var lst = $("#list");
+            var d = "hello";
+            var id = $("#inp").val();
+            var urlMain = 'api/Student/';
+            var urlGet;
+            $("#btn").click(function () {
+                id = $("#inp").val();
+                urlGet = urlMain + id;
+
+                $.ajax({
+                    type: 'GET',
+                    url: urlGet,
+                    dataType: 'json',
+                    success: function (data) {
+                        $.each(data, function (index, val) {
+                            var nme = val.fName;
+                            $("#list").append('<li>' + nme + '</li>')
+                            //alert(nme);
+                        });
+                    }
+
+                });
+              
+               
+            });
+            $("#btn2").click(function () {
+
+                
+                $.ajax({
+
+                    type: 'POST',
+                    url: urlMain,
+                    data: {
+                        "fName": "roice",
+                        "lName": "Sat",
+                        "batch": "11.1",
+                        "pw": "aaaa",
+                        "em": "r@gmail.com"
+                    }
+                });
+            });
+        });
+
+    </script>
+</head>
+<body>
+
+    <br />
+    <input type="type" name="name" id="inp" />
+    <input type="button" name="Click" value="" id="btn" />
+    <input type="button" name="Click" value="btn222222" id="btn2" />
+    <ol id="list">
+    </ol>
+</body>
+</html>

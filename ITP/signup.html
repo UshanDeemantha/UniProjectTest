@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="signupCss.css">
+    <link href="https://fonts.googleapis.com/css?family=Abril+Fatface&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Merienda&display=swap" rel="stylesheet">
+    <script src="jquery-3.3.1.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $("#loginBtn").click(function () {
+
+                var inp = $("#typeSelector").val();
+                //alert(inp);
+
+                if (($("#txtSuPw").val() == $("#txtSuRePw").val()) && ($("#txtSuPw").val().length != 0)) {
+
+                    $.ajax({
+
+                        type: 'POST',
+                        url: 'api/Student',
+                         data: {
+                              "NIC" : $("#txtSuNIC").val(),
+                              "Name": $("#txtSuNm").val(),
+                              "prof": "Requested",
+                              "em": $("#txtSuEm").val(),
+                              "aff": $("#txtSuAff").val(),
+                              "ty" : $("#typeSelector").val(),
+                              "pw": $("#txtSuPw").val(),
+                         }
+                    });
+                }
+
+            });
+            
+        });
+
+    </script>
+
+</head>
+
+<body>
+    <div class="MAIN">
+        <div class="m1 main allImg">
+
+        </div>
+        <div class="midDiv allImg">
+            <div class="midMid">
+                <p class="login">Signup</p>
+                <input type="text" class="txtField fn" placeholder="NIC" id="txtSuNIC">
+                <input type="text" class="txtField ln" placeholder="Name" id="txtSuNm">
+                <input type="text" class="txtField un" placeholder="Affiliation" id="txtSuAff">
+                <br>
+                 <input type="text" class="txtField pw" placeholder="E-mail" id="txtSuEm">
+                  <input type="text" class="txtField pw" placeholder="Password" id="txtSuPw"> 
+                   <input type="text" class="txtField pw" placeholder="Re-Enter Password" id="txtSuRePw">
+                   <select id="typeSelector">
+                       <option value="Student">Student</option>
+                       <option value="Industry">Industry</option>
+                       <option value="Admin">Admin</option>
+                   </select>
+                 <br><br>
+                 <button id="loginBtn" >
+                     Signup
+                 </button>
+                 <br>
+                 <a href="login.html" class="createAcc" >Click to login !</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

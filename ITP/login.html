@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="loginCss.css">
+    <link href="https://fonts.googleapis.com/css?family=Abril+Fatface&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Merienda&display=swap" rel="stylesheet">
+
+    <script src="jquery-3.3.1.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $("#loginBtn").click(function () {
+                
+                var NIC = $("#txtLogNIC").val();
+                var pw = $("#txtLogPw").val();
+                var stdDBID = 0;
+                localStorage.setItem("textvalue", NIC);
+               
+
+                var urlLogin = 'api/Student?un=' + NIC + '?pw=' + pw + '?vl=Confirmed';
+                
+                $.ajax({
+                    type: 'GET',
+                    url: urlLogin,
+                    dataType: 'json',
+                    success: function (data) {
+                        $.each(data, function (index, val) {
+                            var t = val.ty;
+                          
+                            if ((val.NIC == $("#txtLogNIC").val()) && (val.pw == $("#txtLogPw").val())) {
+
+                                stdDBID = val.stID;
+                                  localStorage.setItem("txt", stdDBID);
+                                //alert(stdDBID);
+                                if (t == "Student") {
+                                    window.location.href = "studentPage.html";
+                                }
+                                else if (t == "Admin") {
+                                    window.location.href = "apiAdmin.html";
+                                }
+                                else {
+                                    window.location.href = "industry.html";
+                                }
+                            }
+                            
+                        });
+                    }
+                });
+            })
+        });
+
+    </script>
+</head>
+
+<body>
+    <div class="MAIN">
+        <div class="m1 main allImg">
+
+        </div>
+        <div class="midDiv allImg">
+            <div class="midMid">
+                <p class="login">Login</p>
+                <input type="text" class="txtField" placeholder="Username" id="txtLogNIC">
+                <br>
+                 <input type="text" class="txtField pw" placeholder="Password" id="txtLogPw">
+                 <br><br>
+                 <button id="loginBtn">
+                     Login
+                 </button>
+                 <br>
+                 <a href="signup.html" class="createAcc">Create account !</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

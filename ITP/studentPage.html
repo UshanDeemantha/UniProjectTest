@@ -1,0 +1,425 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="studentCss.css">
+    
+    <script src="jquery-3.3.1.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            var abd = localStorage.getItem("txt");
+           // alert(abd);
+            
+           
+
+             // adding valus to extBoxes ............................................................................
+
+              var stIDDB = 0;
+              var IDT;
+              var NameT;
+              var pwT;
+              var tyT;
+              var emT;
+              var affT;
+              var getValuePK = localStorage.getItem("textvalue");
+            
+              var urlUserId = 'api/Student/' + getValuePK;
+
+
+              $.ajax({
+                  type: 'GET',
+                  url: urlUserId,
+                    dataType: 'json',
+                    success: function (data) {
+                        $.each(data, function (index, val) {
+                          stIDDB = val.stID;
+                             IDT = val.NIC;
+                             NameT = val.Name;
+                             pwT = val.pw;
+                             tyT = val.ty;
+                             emT = val.em;
+                            affT = val.aff;
+                            
+                            // loading items to the table ..
+
+                            $("#name").val(NameT);
+                            $("#em").val(emT);
+                            $("#aff").val(affT);
+                            $("#pw").val(pwT);
+                        });
+                    }
+              });
+          
+            //alert(stIDDB);
+
+           // update userAccountInfo .....................................
+            $("#aSubBtn").click(function () {
+
+                if ((NameT != $("#name").val()) || (emT != $("#em").val()) || (affT != $("#aff").val()) || (pwT != $("#pw").val())  ) {
+
+                    alert("conne");
+
+                    $.ajax({
+                        type: 'PUT',
+                        url: 'api/Editaccount/' + getValuePK,
+                          data: {
+                              "Name": $("#name").val(),
+                              "em": $("#em").val(),
+                              "aff": $("#aff").val(),
+                              //"ty": $("#personalDrop").val(),
+                              "pw": $("#pw").val()
+                          }
+                    });
+                }
+            });
+
+            $("#lo").click(function () {
+                window.location.replace("login.html");
+            });
+            // ................................................................................................
+
+            $("#qSubBtn").click(function () {
+
+                alert(getValuePK);
+
+                var stdID;
+                var catID;
+
+                var urlStd = 'api/Student';
+                var urlCst = 'api/Category';
+                var urlQst = 'api/Qualification';
+
+                // programming section ..... ......................................................
+
+                if($("#cbPro").is(":checked"))
+                {
+                    $.ajax({
+                        type: 'POST',
+                        url: urlCst,
+                        data: {
+                            "sID": abd,
+                            "cID": "1",
+                        }
+
+                    });
+                }
+                // C#
+                if($("#cbCs").is(":checked"))
+                {
+                    $.ajax({
+                        type: 'POST',
+                        url: urlQst,
+                        data: {
+                            "sID": abd,
+                            "qID": "1",
+                        }
+
+                    });
+                }
+                   // Java Script
+                 if($("#cbJs").is(":checked"))
+                {
+                    $.ajax({
+                        type: 'POST',
+                        url: urlQst,
+                        data: {
+                            "sID": abd,
+                            "qID": "2",
+                        }
+
+                    });
+                }
+                //PHP
+                if ($("#cbPhp").is(":checked")) {
+
+                    $.ajax({
+                        type: 'POST',
+                        url: urlQst,
+                        data: {
+                             "sID": abd,
+                             "qID": "3",
+                        }
+                    });
+                }
+                // Ruby
+                if($("#cbRb").is(":checked"))
+                {
+                    $.ajax({
+                        type: 'POST',
+                        url: urlQst,
+                        data: {
+                            "sID": abd,
+                            "qID": "1005",
+                        }
+
+                    });
+                }
+               // C ++ 
+                if($("#cbCp").is(":checked"))
+                {
+                    $.ajax({
+                        type: 'POST',
+                        url: urlQst,
+                        data: {
+                            "sID": abd,
+                            "qID": "1006",
+                        }
+
+                    });
+                }
+                // NETWorkin......................................................................
+
+                if($("#cbNet").is(":checked"))
+                {
+                    $.ajax({
+                        type: 'POST',
+                        url: urlCst,
+                        data: {
+                            "sID": abd,
+                            "cID": "4",
+                        }
+
+                    });
+                }
+                // Pentesting
+                if($("#cbPt").is(":checked"))
+                {
+                    $.ajax({
+                        type: 'POST',
+                        url: urlQst,
+                        data: {
+                            "sID": abd,
+                            "qID": "4",
+                        }
+
+                    });
+                }
+                   // N-Mapping
+                if($("#cbNm").is(":checked"))
+                {
+                    $.ajax({
+                        type: 'POST',
+                        url: urlQst,
+                        data: {
+                            "sID": abd,
+                            "qID": "5",
+                        }
+
+                    });
+                }
+                // Network COnfiguration ...
+                if($("#cbNc").is(":checked"))
+                {
+                    $.ajax({
+                        type: 'POST',
+                        url: urlQst,
+                        data: {
+                            "sID": abd,
+                            "qID": "6",
+                        }
+
+                    });
+                }
+                 // Network Securuty
+                if($("#cbNs").is(":checked"))
+                {
+                    $.ajax({
+                        type: 'POST',
+                        url: urlQst,
+                        data: {
+                            "sID":abd,
+                            "qID": "1004",
+                        }
+
+                    });
+                }
+                // Quality   Assurance ....................................................
+              if($("#cbQA").is(":checked"))
+                {
+                    $.ajax({
+                        type: 'POST',
+                        url: urlCst,
+                        data: {
+                            "sID": abd,
+                            "cID": "2",
+                        }
+
+                    });
+                }
+                // Issue tracking
+                if($("#cbIs").is(":checked"))
+                {
+                    $.ajax({
+                        type: 'POST',
+                        url: urlQst,
+                        data: {
+                            "sID": abd,
+                            "qID": "1003",
+                        }
+
+                    });
+                }
+                      // business analyays
+                if($("#cbBa").is(":checked"))
+                {
+                    $.ajax({
+                        type: 'POST',
+                        url: urlQst,
+                        data: {
+                            "sID": abd,
+                            "qID": "1002",
+                        }
+
+                    });
+                }
+                      // Audit .
+                if($("#cbAd").is(":checked"))
+                {
+                    $.ajax({
+                        type: 'POST',
+                        url: urlQst,
+                        data: {
+                            "sID": abd,
+                            "qID": "7",
+                        }
+
+                    });
+                }
+              
+
+            });
+
+            // button 2 .........................................................................
+            // adding values to the database using API
+            $("#aSubBtn").click(function () {
+
+                var NIC = $("#NIC").val();
+                var name = $("#name").val();
+                var prof = $("#prof").val();
+                var em = $("#em").val();
+                var aff = $("#aff").val();
+                var tp = $("#tp").val();
+                var pw = $("#pw").val();
+
+                $.ajax({
+                    type: 'PUT',
+                    url: urlStd,
+
+                });
+            });
+         });
+    
+    </script>
+</head>
+
+<body>
+    <div class="main">
+
+        <div class="angleDiv"> </div>
+        <p class="hed">Industrial Prepational <br>Training</p>
+        <div class="longDiv"></div>
+
+    </div>
+    <div class="m2">
+        <strong>
+            <p class="m2Hed">Post your Qulifications</p>
+        </strong>
+        <p class="m2Det">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus maxime perspiciatis beatae dolores ipsam deserunt. Quidem nisi, asperiores, recusandae accusamus nobis perferendis nihil incidunt qui similique. Quam ab, omnis assumenda.</p>
+        <div class="m2Up"></div>
+        <div class="proDiv con">
+            <div class="cm cIn">
+                <input type="checkbox" value="Programming" class="cb" id="cbPro">
+                <p class="lbl">
+                    Programming
+                </p>
+            </div>
+            <div class="cINSub">
+                <input type="checkbox" class="subCB" value="c#" id="cbCs">
+                <p class="lblSub">C#</p>
+            </div>
+            <div class="cINSub">
+                <input type="checkbox" class="subCB" id="cbJs">
+                <p class="lblSub">Java Script</p>
+            </div>
+            <div class="cINSub">
+                <input type="checkbox" class="subCB" id="cbPhp">
+                <p class="lblSub">PHP</p>
+            </div>
+            <div class="cINSub">
+                <input type="checkbox" class="subCB" id="cbRb">
+                <p class="lblSub">Ruby on RALLS</p>
+            </div>
+            <div class="cINSub">
+                <input type="checkbox" class="subCB" id="cbCp">
+                <p class="lblSub">C++</p>
+            </div>
+        </div>
+        <div class="qaDiv con">
+            <div class="cm cIn">
+                <input type="checkbox" value="QualityAssurance" class="cb" id="cbQA">
+                <p class="lbl">
+                    Quality Assurance
+                </p>
+            </div>
+            <div class="cINSub">
+                <input type="checkbox" class="subCB" id="cbIs">
+                <p class="lblSub">Issue tracking</p>
+            </div>
+            <div class="cINSub">
+                <input type="checkbox" class="subCB" id="cbBa">
+                <p class="lblSub">Business Analityc</p>
+            </div>
+            <div class="cINSub">
+                <input type="checkbox" class="subCB" id="cbAd">
+                <p class="lblSub">Audits</p>
+            </div>
+
+        </div>
+        <div class="netDiv con">
+            <div class="cm cIn">
+                <input type="checkbox" value="Networking" class="cb" id="cbNet">
+                <p class="lbl">
+                    Networking
+                </p>
+            </div>
+            <div class="cINSub">
+                <input type="checkbox" class="subCB" id="cbPt">
+                <p class="lblSub">Pentesting</p>
+            </div>
+            <div class="cINSub">
+                <input type="checkbox" class="subCB" id="cbNc">
+                <p class="lblSub">Network Configuration</p>
+            </div>
+            <div class="cINSub">
+                <input type="checkbox" class="subCB" id="cbNm">
+                <p class="lblSub">N-Map</p>
+            </div>
+            <div class="cINSub">
+                <input type="checkbox" class="subCB" id="cbNs">
+                <p class="lblSub">Network Securuty</p>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <button id="qSubBtn">Submit</button>
+    </div>
+    <div class="m3">
+        <h1 class="m3Hed">Edit your Profile</h1>
+        <!--<input type="text" id="nic" class="txtF" placeholder="txtStudNIC" >--> <br>
+        <input type="text" id="name" class="txtF" placeholder=""> <br>
+        <!--<input type="text" id="prof" class="txtF" placeholder="">--> <br>
+        <input type="text" id="em" class="txtF" placeholder=""> <br>
+        <input type="text" id="aff" class="txtF" placeholder=""> <br>
+        <!--<input type="text" id="ty" class="txtF" placeholder="">--> 
+        <br>
+        <input type="text" id="pw" class="txtF" placeholder=""> <br>
+        <button id="aSubBtn">Submit</button>
+
+    </div>
+
+    <button id="lo" style="width:20%; padding:1%; background-color:red; color:white"> Logout </button>
+</body>
+
+</html>

@@ -1,0 +1,362 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="adminApiCss.css">
+    <script src="jquery-3.3.1.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            // adding valus to extBoxes ............................................................................
+
+              var IDT;
+              var NameT;
+              var pwT;
+              var tyT;
+              var emT;
+              var affT;
+
+            var getValuePK = localStorage.getItem("textvalue");
+            //alert(getValue1);
+            var urlUserId = 'api/Student/' + getValuePK;
+
+              $.ajax({
+                  type: 'GET',
+                  url: urlUserId,
+                    dataType: 'json',
+                    success: function (data) {
+                        $.each(data, function (index, val) {                          
+                             IDT = val.NIC;
+                             NameT = val.Name;
+                             pwT = val.pw;
+                             tyT = val.ty;
+                             emT = val.em;
+                             affT = val.aff;
+
+                            // loading items to the table ...
+                            //$("#txtNIC").val(IDT);
+                            $("#txtNm").val(NameT);
+                            $("#txtEm").val(emT);
+                            $("#txtAff").val(affT);
+                            $("#txtPw").val(pwT);
+                        });
+                    }
+              });
+
+            // logout .....................................................
+
+            $("#lo").click(function () {
+                window.location.replace("login.html");
+            });
+
+            var userLoginNic = 10240810;
+            // update userAccountInfo .....................................
+            $("#udSubBtn").click(function () {
+
+                if ((NameT != $("#txtNm").val()) || (emT != $("#txtEm").val()) || (affT != $("#txtAff").val()) || (pwT != $("#txtPw").val())  ) {
+
+                    alert("conne");
+
+                    $.ajax({
+                        type: 'PUT',
+                         url: 'api/Editaccount/' + userLoginNic,
+                          data: {
+                              "Name": $("#txtNm").val(),
+                              "em": $("#txtEm").val(),
+                              "aff": $("#txtAff").val(),
+                              //"ty": $("#personalDrop").val(),
+                              "pw": $("#txtPw").val()
+                          }
+                    });
+                }
+            });
+            // adding values to the requested Table.............................................................
+            var urlStdQli = 'api/Student?prof=Requested';
+            var qs;
+            
+              
+              $.ajax({
+                    type: 'GET',
+                    url: urlStdQli,
+                    dataType: 'json',
+                    success: function (data) {
+                        $.each(data, function (index, val) {                          
+                            var ID = val.NIC;
+                            var Name = val.Name;
+                            var pw = val.pw;
+                            var ty = val.ty;
+                            var em = val.em;
+
+                            // loading items to the dropdown list...
+                            var newOption = $('<option value="' + ID + '">' + Name + '</option>');
+                            $('#reqNameList').append(newOption);
+
+                            // loading items to the table ...
+                            $("#listRAID").append('<li>' + ID + '</li>');
+                            $("#listRANm").append('<li>' + Name + '</li>');
+                            $("#listRATp").append('<li>' + ty + '</li>');
+                            $("#listRApw").append('<li>' + pw + '</li>');
+                            $("#listRAem").append('<li>' + em + '</li>');
+                        });
+                    }
+              });
+
+            // confirming users  requests ....
+
+            $("#BtnReqCon").click(function () {
+         
+                var selectedName = $("#reqNameList").val();
+                var urlStdPUT = 'api/Student/' + selectedName;
+                 $.ajax({
+                     type: 'PUT',
+                     url: urlStdPUT,
+                     data: {
+                         "prof":"Confirmed",
+                     }
+                 });
+               // location.reload(true);
+            });
+
+             // deleting members from users  request table  ....
+
+            $("#BtnReqDel").click(function () {
+         
+                var selectedName = $("#reqNameList").val();
+                var urlStdDEL = 'api/Student/' + selectedName;
+                 $.ajax({
+                     type: 'DELETE',
+                     url: urlStdDEL,
+                     success: function (data) {
+                         alert("DONE");
+                    }
+
+                 });
+               // location.reload(true);
+            });
+
+            // ...................................................................................................
+
+            // adding items to the Confirmed table ......
+
+            var urlConStd = 'api/Student?prof=Confirmed'
+              $.ajax({
+                  type: 'GET',
+                  url: urlConStd,
+                    dataType: 'json',
+                    success: function (data) {
+                        $.each(data, function (index, val) {                          
+                            var ID = val.NIC;
+                            var Name = val.Name;
+                            var pw = val.pw;
+                            var ty = val.ty;
+                            var em = val.em;
+
+                            // loading items to the dropdown list...
+                            var newOption = $('<option value="' + ID + '">' + Name + '</option>');
+                            $('#conListDrop').append(newOption);
+
+                            // loading items to the table ...
+                            $("#listCAID").append('<li>' + ID + '</li>');
+                            $("#listCANm").append('<li>' + Name + '</li>');
+                            $("#listCATp").append('<li>' + ty + '</li>');
+                            $("#listCApw").append('<li>' + pw + '</li>');
+                            $("#listCAem").append('<li>' + em + '</li>');
+                        });
+                    }
+              });
+
+            // deletng items from CONFIRMED Table
+
+              $("#BtnConDel").click(function () {
+         
+                  var selectedName = $("#conListDrop").val();
+                  var urlStdDEL = 'api/Student/' + selectedName;
+                  var urlStdQuli = 'api/Qualification/' + selectedName;
+                  var urlStdCat = 'api/Category/' + selectedName;
+
+                  // deleting Items from std_quli table ...
+
+                 $.ajax({
+                     type: 'DELETE',
+                     url: urlStdQuli,
+                     success: function (data) {
+                         alert("hi");
+                         $.ajax({
+                            type: 'DELETE',
+                            url: urlStdCat,
+                             success: function (data) {
+                                  $.ajax({
+                                       type: 'DELETE',
+                                       url: urlStdDEL,
+                                        success: function (data) {
+                                        //location.reload(true);
+                                        }
+
+                                   });
+
+                             }
+
+                        });
+
+                     }
+
+                 });
+
+              
+                
+              });
+
+            $("#BtnQSearch").click(function () {
+
+
+                //$("#listStdQuli").empty();
+                //$("#listQuliQuli").empty();
+                //$("#listEmQuli").empty();
+
+                //qs = $("#qSelector option:selected").val();
+                //$("#listQuliQuli").append('<li>' + qs + '</li>')
+                urlStdQli = 'api/Student?prof=Request';
+
+
+                $.ajax({
+                    type: 'GET',
+                    url: urlStdQli,
+                    dataType: 'json',
+                    success: function (data) {
+                        $.each(data, function (index, val) {
+                           
+                            var nme = val.sID;
+
+                              //$.ajax({
+                              //    type: 'GET',
+                              //    url: 'api/Student/' + nme,
+                              //    dataType: 'json',
+                              //    success: function (data) {
+                              //        $.each(data, function (index, val2) {
+                              //            var fn = val2.fName;
+                              //            var em = val2.em;
+                              //            $("#listStdQuli").append('<li>' + fn + '</li>');
+                              //            $("#listEmQuli").append('<li>' + em + '</li>');
+                                          
+                              //        });
+                              //    }
+                              //});
+    
+                        });
+                    }
+                });
+                
+               
+
+              
+
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <!-- <div class="m1">
+        
+    </div>-->
+    <div class="m1">
+        <div class="left sep">
+            <h1 class="m3Hed">Edit your Profile</h1>
+            <!--<input type="text" id="txtNIC" class="txtF" placeholder="">--> <br>
+            <input type="text" id="txtNm" class="txtF" placeholder=""> <br>
+            <input type="text" id="txtEm" class="txtF" placeholder=""> <br>
+            <input type="text" id="txtAff" class="txtF" placeholder=""> <br>
+            <!--<input type="text" id="fn" class="txtF" placeholder="">--> <br>
+            <!--<select id="personalDrop">
+           <option value="Admin">Admin</option>
+           <option value="Industry">Industry</option>
+           <option value="Student">Student</option>
+     </select>-->
+            <br />
+            <input type="text" id="txtPw" class="txtF" placeholder=""> <br>
+            <button id="udSubBtn">Submit</button>
+            <button id="lo" style="width:20%; padding:1%; background-color:red; color:white; margin-top: 5%"> Logout </button>
+        </div>
+        <div class="right sep">
+            <div class="rTop ud">
+               <p class="adHed">Requested Accounts</p>
+               <div class="catDiv">
+                   <!--   <p class="aHed">Requsted Accounts</p>-->
+                   <p class="catLbl float">Name</p>
+                   <select name="" id="reqNameList" class="catDrop float">
+               
+                   </select>
+                   <!--<select name="" id="" class="catDrop float">
+                       <option value="Student">
+                           Student
+                       </option>
+                       <option value="Industry">
+                           Industry
+                       </option>
+                   </select>-->
+                   <button class="cSBtn float" id="BtnReqCon">confirm</button>
+                   <button class="cSBtn float rDelBtn" id="BtnReqDel" >Delete</button>
+               </div>
+                <div class="tblDiv">
+                    <p class="tblHed float">UserID</p>
+                    <p class="tblHed float">Name</p>
+                    <p class="tblHed float">Password</p>
+                    <p class="tblHed float">Type</p>
+                    <p class="tblHed float">E-mail</p>
+                    <div class="clear"></div>
+                    <ol class="catList" id="listRAID">
+                    </ol>
+                    <ul class="catList cl2" id="listRANm">
+                    </ul>
+
+                    <ul class="catList cl2" id="listRApw">
+                    </ul>
+                    <ul class="catList cl2" id="listRATp">
+                    </ul>
+                    <ul class="catList cl2" id="listRAem">
+                    </ul>
+                </div>
+            </div>
+            <div class="rDown ud">
+                <p class="adHed">Confirmed Accounts</p>
+                <div class="catDiv">
+                    <p class="catLbl float">Category</p>
+                    <select name="" id="conListDrop" class="catDrop float">
+                       
+                    </select>
+                    <!--<button class="cSBtn float" id="BtnQSearch">Search</button>-->
+                       <button class="cSBtn float rDelBtn" id="BtnConDel">Delete</button>
+                </div>
+                <div class="tblDiv">
+                    <p class="tblHed float">UserID</p>
+                    <p class="tblHed float">Name</p>
+                    <p class="tblHed float">Password</p>
+                     <p class="tblHed float">Type</p>
+                     <p class="tblHed float">E-mail</p>
+                    <div class="clear"></div>
+                    <ol class="catList" id="listCAID">
+
+                    </ol>
+                    <ul class="catList cl2" id="listCANm">  
+
+                    </ul>
+                     <ul class="catList cl2" id="listCATp">
+
+                    </ul>
+                    <ul class="catList cl2" id="listCApw">
+
+                    </ul>
+                    <ul class="catList cl2" id="listCAem">
+       
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
